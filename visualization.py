@@ -43,6 +43,7 @@ def visualize_latent_space(z, yval, e):
     plt.title("Epoch: "+str(e))
     plt.show()
     
+# Plot reconstructed images
 def print_comparison_test(data, o, real_dimension):
     for i in range(0,15):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(2,4))
@@ -70,10 +71,10 @@ def visualize_generated(imgs, e, real_dimension):
     
 """ Parameters
 X_dmap: data embedding to be visualized
-bl: string labels
-labels: integer labels for coloring
-text_data: boolean parameter specified for Word2Vec data visualization
-text_labels: optional,
+bl: string labels.
+labels: integer labels for coloring.
+text_data: boolean parameter specified for Word2Vec data visualization.
+text_labels: optional, string labels for colorbar.
 p: optional, integer. Used as modulo for adjusting number of annotations
 figsize: optional figure size of plot. Default is assigned.
 name: string, name of the file for plot to be saved
@@ -104,4 +105,33 @@ def plot_embedding(X_dmap, bl, labels, text_data, text_labels=[], p=1, figsize=(
         cbar.set_ticklabels(text_labels)
         
     plt.savefig(str(name)+'.png') # save image
+    plt.show()
+    
+""" Parameters
+gen_cnn: data embedding to be visualized
+test_y: integer labels for coloring
+cifar_labels: string labels for colorbar
+figsize: optional figure size of plot. Default is assigned.
+name: string, name of the file for plot to be saved
+"""    
+def plot_3D_embedding_cifar(gen_cnn, test_y, cifar_labels, figsize=(20,10), name='embed_fig'):
+    # 3D representation
+    x = []
+    y = []
+    z = []
+    for value in gen_cnn:
+        x.append(value[0])
+        y.append(value[1])
+        z.append(value[2])
+
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111, projection='3d')
+    p = ax.scatter(x,y,z, cmap = plt.cm.rainbow, c = test_y)
+
+    color_list = np.arange(min(test_y), max(test_y)+1).tolist()
+    cbar = fig.colorbar(p)
+    cbar.set_ticks(color_list)
+    cbar.set_ticklabels(cifar_labels)
+    ax.view_init(30,150)
+    plt.savefig("cifar_3D"+name+'.png')
     plt.show()
